@@ -1,49 +1,49 @@
 package models;
 
-public class Node {
-	private String info;
-	private Node next;
-	private Node previous;
+import java.util.ArrayList;
 
-	public Node(String info) {
+public class Node<T> {
+	private T info;
+	private Node<T> father;
+	private ArrayList<Node<T>> children;
+
+	public Node(T info, Node<T> father) {
 		this.info = info;
-		this.next = null;
-		this.previous = null;
+		this.father = father;
+		children = new ArrayList<>();
 	}
 
-	public Node(String info, Node next) {
+	public Node(T info) {
 		this.info = info;
-		this.next = next;
-		this.previous = null;
+		children = new ArrayList<>();
 	}
 
-	public Node(String info, Node next, Node previous) {
-		this.info = info;
-		this.next = next;
-		this.previous = previous;
+	public void setFather(Node<T> father) {
+		this.father = father;
 	}
 
-	public Node getPrevious() {
-		return previous;
+	public void addChild(Node<T> newChild) {
+		children.add(newChild);
 	}
 
-	public void setPrevious(Node previous) {
-		this.previous = previous;
+	public void printChildren() {
+		children.forEach(System.out::println);
 	}
 
-	public String getInfo() {
+	public T getInfo() {
 		return info;
 	}
 
-	public void setInfo(String info) {
-		this.info = info;
+	public Node<T> getFather() {
+		return father;
 	}
 
-	public Node getNext() {
-		return next;
+	public ArrayList<Node<T>> getChildren() {
+		return children;
 	}
 
-	public void setNext(Node next) {
-		this.next = next;
+	@Override
+	public String toString() {
+		return info.toString();
 	}
 }
