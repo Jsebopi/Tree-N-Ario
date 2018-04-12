@@ -2,32 +2,45 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
 
-import models.ManageStructures;
+import model.Node;
 import views.FileChooser;
-import views.Window;
+import views.MainWindow;
 
-public class Controller implements ActionListener , MouseListener{
-	private Window window;
+public class Controller implements ActionListener {
+
 	private FileChooser chooser;
-	private ManageStructures manageStructures;
-	
+	ArrayList<String> files;
+	private File file;
+	private Node root;
+	private MainWindow window;
+
 	public Controller() {
-	manageStructures = new ManageStructures();
-	chooser = new FileChooser(this);
-	window = new Window(this, manageStructures.getMedicines().getRoot().getInfo());
-	window.setVisible(true);
+		file = new File("");
+		root = new Node();
+		chooser = new FileChooser(this);
+		window = new MainWindow(this);
+		files = new ArrayList<>();
+		window.setVisible(true);
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		switch (arg0.getActionCommand()) {
+	public void actionPerformed(ActionEvent e) {
+
+		switch (e.getActionCommand()) {
 		case "DIREC":
-			chooser.getPathFile();
-			chooser.setVisible(true);
-			
+			try {
+				file = new File(chooser.getPathFile());
+				root.setName(file.getPath());
+				createTree(root);
+				getExtensions();
+				window.setData(root, files, getExtensions());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 			break;
 
 		default:
@@ -36,34 +49,36 @@ public class Controller implements ActionListener , MouseListener{
 
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	private void createTree(Node node) {
+		for (File file : new File(node.getName()).listFiles()) {
+			if (file.isDirectory()) {
+				Node aux = new Node();
+				aux.setName(file.getPath());
+				createTree(aux);
+				node.addNode(aux);
+			} else {
+				node.addFile(file.getPath());
+				files.add(file.getName());
+			}
+		}
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	private String getFileExtension(File file) {
+		String name = file.getName();
+		try {
+			return name.substring(name.lastIndexOf(".") + 1);
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public HashSet<String> getExtensions() {
+		HashSet<String> extensions = new HashSet<>();
+		for (String file : files) {
+			extensions.add(getFileExtension(new File(file)));
+		}
+		return extensions;
 	}
 
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
+}
 }

@@ -1,49 +1,44 @@
-package models;
+package model;
 
 import java.util.ArrayList;
 
-public class Node<T> {
-	private T info;
-	private Node<T> father;
-	private ArrayList<Node<T>> children;
+public class Node {
 
-	public Node(T info, Node<T> father) {
-		this.info = info;
-		this.father = father;
-		children = new ArrayList<>();
+	private ArrayList<String> files;
+	private ArrayList<Node> directory;
+	
+	private String name;
+	
+	public Node() {
+		files = new ArrayList<>();
+		directory = new ArrayList<>();
+	}
+	
+
+	public String getName() {
+		return name;
 	}
 
-	public Node(T info) {
-		this.info = info;
-		children = new ArrayList<>();
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setFather(Node<T> father) {
-		this.father = father;
+	public ArrayList<String> getFiles() {
+		return files;
 	}
-
-	public void addChild(Node<T> newChild) {
-		children.add(newChild);
+	
+	public ArrayList<Node> getDirectory() {
+		return directory;
 	}
-
-	public void printChildren() {
-		children.forEach(System.out::println);
+	
+	public void addFile(String file) {
+		
+		files.add(file);
+		
 	}
-
-	public T getInfo() {
-		return info;
+	
+	public void addNode(Node node) {
+		directory.add(node);
 	}
-
-	public Node<T> getFather() {
-		return father;
-	}
-
-	public ArrayList<Node<T>> getChildren() {
-		return children;
-	}
-
-	@Override
-	public String toString() {
-		return info.toString();
-	}
+	
 }
